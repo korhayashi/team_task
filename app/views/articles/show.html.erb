@@ -14,7 +14,8 @@
       </div>
       <!-- /.card-header -->
       <div class="card-body">
-        <%= markdown(@article.content).html_safe %>
+        <%#= markdown(@article.content).html_safe %>
+        <%= markdown(Article.find(params[:id]).content) %>
         <%= image_tag @article.image_url if @article.image_url %>
       </div>
 
