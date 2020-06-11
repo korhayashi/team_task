@@ -1,7 +1,7 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy]
-  before_action :not_authorized, only: %i[edit]
+  before_action :set_team, only: %i[show edit update transfer destroy]
+  before_action :not_authorized, only: %i[edit update transfer]
 
   def index
     @teams = Team.all
@@ -32,6 +32,17 @@ class TeamsController < ApplicationController
 
   def update
     if @team.update(team_params)
+      redirect_to @team, notice: I18n.t('views.messages.update_team')
+    else
+      flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
+      render :edit
+    end
+  end
+
+  def transfer
+    if @team.update(team_params)
+      binding.irb
+      TeamMailer.team_mail(@team).deliver
       redirect_to @team, notice: I18n.t('views.messages.update_team')
     else
       flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
